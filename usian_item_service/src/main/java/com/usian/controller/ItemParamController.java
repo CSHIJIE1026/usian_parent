@@ -14,6 +14,11 @@ public class ItemParamController {
     @Autowired
     private ItemParamService itemParamService;
 
+    /**
+     * 根据商品分类 ID 查询规格参数模板
+     * @param itemCatId
+     * @return
+     */
     @RequestMapping("/selectItemParamByItemCatId/{itemCatId}")
     public TbItemParam selectItemParamByItemCatId(@PathVariable Long itemCatId){
         return itemParamService.selectItemParamByItemCatId(itemCatId);

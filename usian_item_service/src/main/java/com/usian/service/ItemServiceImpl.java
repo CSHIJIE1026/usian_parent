@@ -24,6 +24,12 @@ public class ItemServiceImpl implements ItemService {
         return tbItemMapper.selectByPrimaryKey(itemId);
     }
 
+    /**
+     * 查询所有商品，并分页
+     * @param page
+     * @param rows
+     * @return
+     */
     @Override
     public PageResult selectTbItemAllByPage(Integer page, Integer rows) {
         PageHelper.startPage(page,rows);

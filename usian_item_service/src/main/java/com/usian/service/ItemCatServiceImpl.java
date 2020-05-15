@@ -16,6 +16,11 @@ public class ItemCatServiceImpl implements ItemCatService {
     @Autowired
     private TbItemCatMapper tbItemCatMapper;
 
+    /**
+     * 根据分类 ID 查询子节点
+     * @param id
+     * @return
+     */
     @Override
     public List<TbItemCat> selectItemCategoryByParentId(Long id) {
         TbItemCatExample tbItemCatExample = new TbItemCatExample();

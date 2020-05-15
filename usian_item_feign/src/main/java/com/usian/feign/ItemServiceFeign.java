@@ -14,6 +14,11 @@ import java.util.List;
 @FeignClient("usian-item-service")
 public interface ItemServiceFeign {
 
+    /**
+     *查询所有商品
+     * @param itemId
+     * @return
+     */
     @RequestMapping("/service/item/selectItemInfo")
     TbItem selectItemInfo(@RequestParam Long itemId);
 

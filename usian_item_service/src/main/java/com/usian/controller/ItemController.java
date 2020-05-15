@@ -15,11 +15,18 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
+
     @RequestMapping("/selectItemInfo")
     public TbItem selectItemInfo(Long itemId){
         return itemService.selectItemInfo(itemId);
     }
 
+    /**
+     * 商品列表查询
+     * @param page
+     * @param rows
+     * @return
+     */
     @RequestMapping("/selectTbItemAllByPage")
     public PageResult selectTbItemAllByPage(@RequestParam Integer page,@RequestParam Integer rows){
         return itemService.selectTbItemAllByPage(page,rows);
