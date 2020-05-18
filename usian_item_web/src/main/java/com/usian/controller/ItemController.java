@@ -41,4 +41,34 @@ public class ItemController {
         return Result.error("查无结果");
     }
 
+    /**
+     * 添加商品
+     * @param tbItem
+     * @param desc
+     * @param itemParams
+     * @return
+     */
+    @RequestMapping("/insertTbItem")
+    public Result insertTbItem(TbItem tbItem,String desc,String itemParams){
+        Integer result = itemServiceFeign.insertTbItem(tbItem,desc,itemParams);
+        if (result == 3){
+            return Result.ok();
+        }
+        return Result.error("添加失败");
+    }
+
+    /**
+     * 删除商品
+     * @param itemId
+     * @return
+     */
+    @RequestMapping("/deleteItemById")
+    public Result deleteItemById(Long itemId){
+        Integer i = itemServiceFeign.deleteItemById(itemId);
+        if (i == 1){
+            return Result.ok();
+        }
+        return Result.error("删除失败");
+    }
+
 }
