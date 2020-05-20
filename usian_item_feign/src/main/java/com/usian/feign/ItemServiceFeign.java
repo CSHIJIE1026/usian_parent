@@ -64,4 +64,21 @@ public interface ItemServiceFeign {
      */
     @RequestMapping("/service/item/deleteItemById")
     Integer deleteItemById(@RequestParam Long itemId);
+
+    /**
+     * 分页查询所有商品规格模板
+     * @param page
+     * @param rows
+     * @return
+     */
+    @RequestMapping("/service/itemParam/selectItemParamAll")
+    PageResult selectItemParamAll(@RequestParam Integer page, @RequestParam Integer rows);
+
+    /**
+     * 删除商品规格模板
+     * @param id
+     * @return
+     */
+    @RequestMapping("/service/itemParam/deleteItemParamById")
+    Integer deleteItemParamById(@RequestParam Long id);
 }
