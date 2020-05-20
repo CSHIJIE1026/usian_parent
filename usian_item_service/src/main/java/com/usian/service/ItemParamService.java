@@ -9,4 +9,6 @@ public interface ItemParamService {
     PageResult selectItemParamAll(Integer page, Integer rows);
 
     Integer deleteItemParamById(Long id);
+
+    Integer insertItemParam(Long itemCatId, String paramData);
 }

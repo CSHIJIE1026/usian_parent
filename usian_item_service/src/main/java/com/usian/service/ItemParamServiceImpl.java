@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 @Service
 @Transactional
@@ -51,6 +52,26 @@ public class ItemParamServiceImpl implements ItemParamService{
     public Integer deleteItemParamById(Long id) {
         int i = tbItemParamMapper.deleteByPrimaryKey(id);
         return i;
+    }
+
+    @Override
+    public Integer insertItemParam(Long itemCatId, String paramData) {
+
+        TbItemParamExample tbItemParamExample = new TbItemParamExample();
+        TbItemParamExample.Criteria criteria = tbItemParamExample.createCriteria();
+        criteria.andItemCatIdEqualTo(itemCatId);
+        List<TbItemParam> tbItemParams = tbItemParamMapper.selectByExample(tbItemParamExample);
+        if (tbItemParams.size() > 0){
+            return 0;
+        }
+
+        TbItemParam tbItemParam = new TbItemParam();
+        Date date = new Date();
+        tbItemParam.setCreated(date);
+        tbItemParam.setUpdated(date);
+        tbItemParam.setItemCatId(itemCatId);
+        tbItemParam.setParamData(paramData);
+        return tbItemParamMapper.insertSelective(tbItemParam);
     }
 
 }

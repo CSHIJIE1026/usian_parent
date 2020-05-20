@@ -47,4 +47,9 @@ public class ItemParamController {
         return i;
     }
 
+    @RequestMapping("/insertItemParam")
+    public Integer insertItemParam(Long itemCatId,String paramData){
+        return itemParamService.insertItemParam(itemCatId,paramData);
+    }
+
 }
