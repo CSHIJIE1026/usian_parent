@@ -17,4 +17,28 @@ public interface ContentServiceFeign {
      */
     @RequestMapping("/service/contentCategory/selectContentCategoryByParentId")
     List<TbContentCategory> selectContentCategoryByParentId(@RequestParam Long id);
+
+    /**
+     * 添加分类内容
+     * @param tbContentCategory
+     * @return
+     */
+    @RequestMapping("/service/contentCategory/insertContentCategory")
+    Integer insertContentCategory(TbContentCategory tbContentCategory);
+
+    /**
+     * 修改分类内容
+     * @param tbContentCategory
+     * @return
+     */
+    @RequestMapping("/service/contentCategory/updateContentCategory")
+    Integer updateContentCategory(TbContentCategory tbContentCategory);
+
+    /**
+     * 删除分类内容
+     * @param categoryId
+     * @return
+     */
+    @RequestMapping("/service/contentCategory/deleteContentCategoryById")
+    Integer deleteContentCategoryById(@RequestParam Long categoryId);
 }

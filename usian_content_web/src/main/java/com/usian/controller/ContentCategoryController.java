@@ -31,4 +31,46 @@ public class ContentCategoryController {
         return Result.error("查无结果");
     }
 
+    /**
+     * 添加分类内容
+     * @param tbContentCategory
+     * @return
+     */
+    @RequestMapping("/insertContentCategory")
+    public Result insertContentCategory(TbContentCategory tbContentCategory){
+        Integer num = contentServiceFeign.insertContentCategory(tbContentCategory);
+        if (num != null){
+            return Result.ok();
+        }
+        return Result.error("添加失败");
+    }
+
+    /**
+     * 修改分类内容
+     * @param tbContentCategory
+     * @return
+     */
+    @RequestMapping("/updateContentCategory")
+    public Result updateContentCategory(TbContentCategory tbContentCategory){
+        Integer num = contentServiceFeign.updateContentCategory(tbContentCategory);
+        if (num != null){
+            return Result.ok();
+        }
+        return Result.error("修改失败");
+    }
+
+    /**
+     * 删除分类内容
+     * @param categoryId
+     * @return
+     */
+    @RequestMapping("/deleteContentCategoryById")
+    public Result deleteContentCategoryById(Long categoryId){
+        Integer num = contentServiceFeign.deleteContentCategoryById(categoryId);
+        if (num == 200){
+            return Result.ok();
+        }
+        return Result.error("删除失败");
+    }
+
 }
