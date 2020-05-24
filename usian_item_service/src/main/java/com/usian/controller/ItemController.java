@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/service/item")
 public class ItemController {
@@ -54,5 +56,28 @@ public class ItemController {
     public Integer deleteItemById(Long itemId){
         return itemService.deleteItemById(itemId);
     }
+
+    /**
+     * 商品回显
+     * @param itemId
+     * @return
+     */
+    @RequestMapping("/preUpdateItem")
+    public Map<String,Object> preUpdateItem(Long itemId){
+        return itemService.preUpdateItem(itemId);
+    }
+
+    /**
+     * 商品修改
+     * @param tbItem
+     * @param desc
+     * @param itemParams
+     * @return
+     */
+    @RequestMapping("/updateTbItem")
+    public Integer updateTbItem(@RequestBody TbItem tbItem,String desc,String itemParams){
+        return itemService.updateTbItem(tbItem,desc,itemParams);
+    }
+
 
 }
