@@ -61,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
         PageResult pageResult = new PageResult();
         pageResult.setPageIndex(tbItemPageInfo.getPageNum());
         pageResult.setResult(tbItemPageInfo.getList());
-        pageResult.setTotalPage(tbItemPageInfo.getTotal());
+        pageResult.setTotalPage(Long.valueOf(tbItemPageInfo.getPages()));
         return pageResult;
     }
 

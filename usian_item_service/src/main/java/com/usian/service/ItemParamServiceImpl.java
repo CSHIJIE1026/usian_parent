@@ -41,10 +41,9 @@ public class ItemParamServiceImpl implements ItemParamService{
 
         PageInfo<TbItemParam> pageInfo = new PageInfo<TbItemParam>(tbItemParams);
         PageResult pageResult = new PageResult();
-        pageResult.setTotalPage(pageInfo.getTotal());
+        pageResult.setTotalPage(Long.valueOf(pageInfo.getPages()));
         pageResult.setResult(pageInfo.getList());
         pageResult.setPageIndex(pageInfo.getPageNum());
-
         return pageResult;
     }
 
