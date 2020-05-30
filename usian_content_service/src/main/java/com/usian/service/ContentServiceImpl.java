@@ -52,6 +52,7 @@ public class ContentServiceImpl implements ContentService {
         tbContent.setCreated(new Date());
         tbContent.setUpdated(new Date());
         int num = tbContentMapper.insertSelective(tbContent);
+        //缓存同步
         redisClient.hdel(PORTAL_AD_KEY,AD_CATEGORY_ID.toString());
         return num;
     }
