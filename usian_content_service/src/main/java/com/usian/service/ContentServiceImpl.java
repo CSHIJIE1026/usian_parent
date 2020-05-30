@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.usian.mapper.TbContentMapper;
 import com.usian.pojo.TbContent;
 import com.usian.pojo.TbContentExample;
+import com.usian.redis.RedisClient;
 import com.usian.utils.AdNode;
 import com.usian.utils.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,12 @@ public class ContentServiceImpl implements ContentService {
 
     @Autowired
     private TbContentMapper tbContentMapper;
+
+    @Value("${PORTAL_AD_KEY}")
+    private String PORTAL_AD_KEY;
+
+    @Autowired
+    private RedisClient redisClient;
 
 
     @Override
@@ -44,12 +51,17 @@ public class ContentServiceImpl implements ContentService {
     public Integer insertTbContent(TbContent tbContent) {
         tbContent.setCreated(new Date());
         tbContent.setUpdated(new Date());
-        return tbContentMapper.insertSelective(tbContent);
+        int num = tbContentMapper.insertSelective(tbContent);
+        redisClient.hdel(PORTAL_AD_KEY,AD_CATEGORY_ID.toString());
+        return num;
     }
 
     @Override
     public Integer deleteContentByIds(Long ids) {
-        return tbContentMapper.deleteByPrimaryKey(ids);
+        int num = tbContentMapper.deleteByPrimaryKey(ids);
+        //缓存同步
+        redisClient.hdel(PORTAL_AD_KEY,AD_CATEGORY_ID.toString());
+        return num;
     }
 
     @Value("${AD_CATEGORY_ID}")
@@ -65,6 +77,12 @@ public class ContentServiceImpl implements ContentService {
 
     @Override
     public List<AdNode> selectFrontendContentByAD() {
+        //查询缓存
+        List<AdNode> adNodeListRedis = (List<AdNode>) redisClient.hget(PORTAL_AD_KEY,AD_CATEGORY_ID.toString());
+        if (adNodeListRedis != null){
+            return adNodeListRedis;
+        }
+
         TbContentExample tbContentExample = new TbContentExample();
         TbContentExample.Criteria criteria = tbContentExample.createCriteria();
         criteria.andCategoryIdEqualTo(AD_CATEGORY_ID);
@@ -82,6 +100,8 @@ public class ContentServiceImpl implements ContentService {
             adNode.setSrcB(tbContent.getPic2());
             adNodeList.add(adNode);
     }
+        //添加到缓存
+        redisClient.hset(PORTAL_AD_KEY,AD_CATEGORY_ID.toString(),adNodeList);
         return adNodeList;
     }
 }

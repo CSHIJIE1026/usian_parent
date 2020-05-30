@@ -3,9 +3,11 @@ package com.usian.service;
 import com.usian.mapper.TbItemCatMapper;
 import com.usian.pojo.TbItemCat;
 import com.usian.pojo.TbItemCatExample;
+import com.usian.redis.RedisClient;
 import com.usian.utils.CatNode;
 import com.usian.utils.CatResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,12 @@ public class ItemCatServiceImpl implements ItemCatService {
 
     @Autowired
     private TbItemCatMapper tbItemCatMapper;
+
+    @Value("${PORTAL_CATRESULT_KEY}")
+    private String PORTAL_CATRESULT_KEY;
+
+    @Autowired
+    private RedisClient redisClient;
 
     /**
      * 根据分类 ID 查询子节点
@@ -35,9 +43,18 @@ public class ItemCatServiceImpl implements ItemCatService {
 
     @Override
     public CatResult selectItemCategoryAll() {
+        //查询缓存
+        CatResult catResultRedis = (CatResult) redisClient.get(PORTAL_CATRESULT_KEY);
+        if (catResultRedis != null){
+            return catResultRedis;
+        }
         //因为一级菜单有子菜单，子菜单有子子菜单，所以要递归调用
         CatResult catResult = new CatResult();
         catResult.setData(getList(0L));
+
+        //添加到缓存
+        redisClient.set(PORTAL_CATRESULT_KEY,catResult);
+
         return catResult;
     }
 
