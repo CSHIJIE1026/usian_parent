@@ -1,0 +1,152 @@
+---------------2020年6月1日----------------
+1、缓存首页内容
+2、缓存商品分类菜单
+查询商品分类时添加缓存：
+	1、查询数据库之前先查询缓存。
+	2、查询到结果，直接响应结果。
+	3、查询不到，缓存中没有需要查询数据库。
+	4、把查询结果添加到缓存中。
+	5、返回结果。
+向redis中添加缓存：
+	Key：PROTAL_CATRESULT_KEY
+	Value：商品分类菜单
+注意：添加缓存不能影响正常业务逻辑。
+3、缓存首页大广告位信息
+向redis中添加缓存：
+ 使用hash对key进行归类。
+ //添加到缓存
+ redisClient.hset(PORTAL_AD_KEY,AD_CATEGORY_ID.toString(),adNodeList);
+ ---------------2020年6月2日----------------
+ 1.ElasticSearch 介绍
+    1.1.为什么要用ElasticSearch？
+        处理海量数据(全文检索)
+    1.2.ElasticSearch介绍
+        ElasticSearch是一个基于Lucene的搜索服务器。
+    1.3.Lucene->ES的发展
+    1.4.原理与应用
+        1.4.1.索引结构
+        1.4.2.倒排索引
+            倒排索引（Inverted index）:也常被称为反向索引，倒排索引是从关键字到文档的映射（已知关键字求文档）。
+            逻辑结构部分是一个倒排索引表，由三部分组成：
+            1、将搜索的文档最终以Document方式存储起来。
+            2、将要搜索的文档内容分词，所有不重复的词组成分词列表。
+            3、每个分词和docment都有关联。
+        1.4.3.RESTful应用方法
+            Elasticsearch提供 RESTful Api接口进行索引、搜索，并且支持多种客户端。
+ 2.安装 ElasticSearch
+    2.1.环境需求
+    2.2.安装ES
+    2.3.配置文件
+    2.4.启动ES
+    2.5.测试
+ 3.安装Kibana
+    3.1.什么是Kibana
+    3.2.下载
+    3.3.安装
+    3.4.修改配置
+    3.5.启动
+    3.6.测试
+ 4.安装head
+    4.1.什么是head
+    4.2.安装
+    4.3.测试
+ 5.ES快速入门
+    5.1.index管理
+        5.1.1.创建index
+        5.1.2.修改index
+        5.1.3.删除index
+    5.2.mapping管理
+        5.2.1 创建mapping
+        5.2.2.查询mapping
+        5.2.3.更新mapping
+        5.2.4.删除mapping
+    5.3.document管理
+        5.3.1.创建document
+            5.3.1.1.POST语法
+            5.3.1.2.PUT语法
+        5.3.2.查询document
+        5.3.3.删除Document
+    5.4.ES读写原理
+        5.4.1.documnet routing（数据路由）
+        5.4.2.ES document写操作原理
+        5.4.3.ES document读操作原理
+        5.4.4.为什么primary shard数量不可变
+ 6.IK分词器
+    6.1.测试分词器
+    6.2.中文分词器
+        6.2.1.Lucene自带中文分词器
+        6.2.2.第三方中文分析器
+        6.3.安装IK分词器
+        6.4.两种分词模式
+        6.5.自定义词库
+ 7.field详细介绍
+    7.1.field的属性介绍
+        7.1.1.type： 通过type属性指定field的类型。
+        7.1.2.analyzer： 通过analyzer属性指定分词模式。
+        7.1.3.index： 通过index属性指定是否索引。
+        7.1.4.field索引不存储
+    7.2.常用field类型
+        7.2.1.text文本字段
+        7.2.2.keyword关键字字段
+        7.2.3.date日期类型
+        7.2.4.Numeric类型
+    7.3.总结
+        field属性的设置标准：
+              	标准
+        分词  	是否有意义
+        索引  	是否搜索
+        存储  	是否展示
+8.Spring Boot整合ElasticSearch
+    8.1.ES客户端
+    8.2.搭建工程
+        8.2.1.pom.xml
+        8.2.2.application.yml
+        8.2.3.config
+        8.2.4.app
+    8.3.索引管理
+        8.3.1.创建索引库
+            8.3.1.1.api
+            8.3.1.2.Java Client
+        8.3.2.删除索引库
+            8.3.2.1.api
+            8.3.2.2.java client
+---------------2020年6月3日----------------
+        8.3.2.添加文档
+            8.3.2.1.api
+            8.3.2.2.java client
+        8.3.3.批量添加文档
+            8.3.3.1.api
+            8.3.3.2.java client
+        8.3.4.修改文档
+            8.3.4.1.api
+            8.3.4.2.java client
+        8.3.5.删除文档
+            8.3.5.1.api
+            8.3.4.2.java client
+     8.4.文档搜索
+        8.4.1.准备环境
+        8.4.2.简单搜索
+            8.4.2.1.api
+            8.4.2.2.java client
+        8.4.3.DSL搜索
+            8.4.3.1.match_all查询
+                8.4.3.1.1.api
+                8.4.3.1.2.java client
+            8.4.3.2.分页查询
+                8.4.3.2.1.api
+                8.4.3.2.2.java client
+        8.4.4.match查询
+            8.4.4.1.api
+            8.4.4.2	java client
+        8.4.5.multi_match查询
+            8.4.5.1.api
+            8.4.5.1.java client
+        8.4.6.bool查询
+            8.4.6.1.api
+            8.4.6.2.java client
+        8.4.7.filter查询
+            8.4.7.1.api
+            8.4.7.2.java client
+        8.4.8.highlight查询
+            8.4.8.1.api
+            8.4.8.2.java client
