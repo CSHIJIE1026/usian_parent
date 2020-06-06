@@ -46,6 +46,7 @@ public class ItemCatServiceImpl implements ItemCatService {
         //查询缓存
         CatResult catResultRedis = (CatResult) redisClient.get(PORTAL_CATRESULT_KEY);
         if (catResultRedis != null){
+            System.out.println("从数据库查询");
             return catResultRedis;
         }
         //因为一级菜单有子菜单，子菜单有子子菜单，所以要递归调用
@@ -54,7 +55,7 @@ public class ItemCatServiceImpl implements ItemCatService {
 
         //添加到缓存
         redisClient.set(PORTAL_CATRESULT_KEY,catResult);
-
+        System.out.println("从redis查询");
         return catResult;
     }
 
