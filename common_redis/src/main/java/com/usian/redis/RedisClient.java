@@ -259,4 +259,13 @@ public class RedisClient {
             return 0;
         }
     }
+
+    public Boolean setnx(String key, Object value, long time){
+        try {
+            return redisTemplate.opsForValue().setIfAbsent(key,value,time,TimeUnit.SECONDS);
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

@@ -14,6 +14,7 @@
         <module name="usian_content_feign" />
         <module name="usian_content_service" />
         <module name="usian_content_web" />
+        <module name="usian_detail_web" />
         <module name="usian_item_feign" />
         <module name="usian_item_service" />
         <module name="usian_item_web" />
@@ -34,6 +35,7 @@
       <module name="usian_content_feign" options="-parameters" />
       <module name="usian_content_service" options="-parameters" />
       <module name="usian_content_web" options="-parameters" />
+      <module name="usian_detail_web" options="-parameters" />
       <module name="usian_item_feign" options="-parameters" />
       <module name="usian_item_service" options="-parameters" />
       <module name="usian_item_web" options="-parameters" />
