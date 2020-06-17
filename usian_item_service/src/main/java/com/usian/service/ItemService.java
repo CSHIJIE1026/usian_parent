@@ -21,4 +21,6 @@ public interface ItemService {
     Integer updateTbItem(TbItem tbItem, String desc, String itemParams);
 
     TbItemDesc selectItemDescByItemId(Long itemId);
+
+    Integer updateTbItemByOrderId(String orderId);
 }

@@ -2,10 +2,7 @@ package com.usian.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.usian.mapper.TbItemCatMapper;
-import com.usian.mapper.TbItemDescMapper;
-import com.usian.mapper.TbItemMapper;
-import com.usian.mapper.TbItemParamItemMapper;
+import com.usian.mapper.*;
 import com.usian.pojo.*;
 import com.usian.redis.RedisClient;
 import com.usian.utils.IDUtils;
@@ -42,6 +39,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private RedisClient redisClient;
+
+    @Autowired
+    private TbOrderItemMapper tbOrderItemMapper;
 
     @Value("${ITEM_INFO}")
     private String ITEM_INFO;
@@ -298,5 +298,21 @@ public class ItemServiceImpl implements ItemService {
             }
             return selectItemDescByItemId(itemId);
         }
+    }
+
+    @Override
+    public Integer updateTbItemByOrderId(String orderId) {
+        TbOrderItemExample tbOrderItemExample = new TbOrderItemExample();
+        TbOrderItemExample.Criteria criteria = tbOrderItemExample.createCriteria();
+        criteria.andOrderIdEqualTo(orderId);
+        List<TbOrderItem> tbOrderItemList = tbOrderItemMapper.selectByExample(tbOrderItemExample);
+        int result = 0;
+        for (int i = 0; i < tbOrderItemList.size(); i++) {
+            TbOrderItem tbOrderItem = tbOrderItemList.get(i);
+            TbItem tbItem = tbItemMapper.selectByPrimaryKey(Long.valueOf(tbOrderItem.getItemId()));
+            tbItem.setNum(tbItem.getNum()-tbOrderItem.getNum());
+            result += tbItemMapper.updateByPrimaryKeySelective(tbItem);
+        }
+        return result;
     }
 }
