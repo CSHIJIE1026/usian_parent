@@ -2,8 +2,9 @@ package com.usian.mapper;
 
 import com.usian.pojo.TbOrder;
 import com.usian.pojo.TbOrderExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TbOrderMapper {
     int countByExample(TbOrderExample example);
@@ -27,4 +28,6 @@ public interface TbOrderMapper {
     int updateByPrimaryKeySelective(TbOrder record);
 
     int updateByPrimaryKey(TbOrder record);
+
+    List<TbOrder> selectOverTimeTborder();
 }
