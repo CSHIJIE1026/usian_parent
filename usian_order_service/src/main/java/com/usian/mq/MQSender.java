@@ -34,7 +34,7 @@ public class MQSender implements ReturnCallback,ConfirmCallback {
     }
 
     /**
-     * 失败回调
+     * 消息发送失败时调用
      * @param message
      * @param replyCode
      * @param replyText
@@ -47,6 +47,12 @@ public class MQSender implements ReturnCallback,ConfirmCallback {
                 + ",exchange:" + exchange + ",routingKey:" + routingKey);
     }
 
+    /**
+     * 下游服务消息确认成功返回后调用
+     * @param correlationData
+     * @param ack
+     * @param cause
+     */
     @Override
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
         String id = correlationData.getId();
