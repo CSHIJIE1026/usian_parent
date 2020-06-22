@@ -28,13 +28,29 @@
             <MaxFileSize>10MB</MaxFileSize>
         </triggeringPolicy>
     </appender>
+    <!-- 为logstash输出的JSON格式的Appender -->
+    <appender name="logstash"
+              class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>192.168.3.136:9250</destination>
+        <!-- 日志输出编码 -->
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽
+					  度，logger是class的全名，%msg：日志消息-->
+                    <pattern>{"message":"%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg" }</pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
 
     <!--myibatis log configure-->
 
     <!-- 日志输出级别 -->
-    <root level="info">
+    <root level="DEBUG">
         <appender-ref ref="Stdout" />
         <appender-ref ref="RollingFile" />
+        <appender-ref ref="logstash" />
     </root>
 
 

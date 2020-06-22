@@ -23,8 +23,6 @@ public class MQSender implements ReturnCallback,ConfirmCallback {
 
     public void sendMsg(LocalMessage localMessage) {
         RabbitTemplate rabbitTemplate = (RabbitTemplate) this.amqpTemplate;
-        //开启回退
-        rabbitTemplate.setMandatory(true);
         rabbitTemplate.setConfirmCallback(this); //确认回调
         rabbitTemplate.setReturnCallback(this);  //失败回退
 
