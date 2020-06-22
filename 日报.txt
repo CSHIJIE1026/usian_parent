@@ -453,6 +453,41 @@
             3.2、创建数据库
                 在数据库中新增local_message，本地消息记录表(初始化状态为发送失败)，用于保证上游服务把消息成功发送。
                 在数据库中新增de_duplication，去重表，用于交易幂等控制。
-
+---------------2020年6月22日----------------
+        1、上游服务把消息成功发送
+        	本地消息表+quartz
+        	    local_message：
+        		tx_no
+        		order_id
+        		status
+        2、下游服务把消息成功消费
+        		持久化+手动确认
+        		持久化： @Queue(durable="true")
+        		手动确认：channel.basicAck(tag,false);
+        3、下游服务对消息做幂等
+        		消息去重表
+        		de_duplication：
+        		tx_no
+        		create_time
+        4、分布式日志
+            4.1、ELK介绍
+                4.1.1、什么是ELK?
+                    elasticsearch：全文检索服务器(存储日志)
+                    kibana：对es存储的数据进行可视化分析(分析日志)
+                    logstash：负责搜集日志，并将数据发送给es(收集日志)
+                4.1.2、为什么要使用elk？
+                		分布式环境日志比较分散
+                		大日志搜索太慢
+                		无法多维度搜索
+            4.2、安装logstash
+            4.3、Spring Cloud集成ELK
+                a、pom.xml
+                	logstash-logback-encoder
+                b、logback.xml
+                	<root level="DEBUG">
+                        <appender-ref ref="Stdout" />
+                        <appender-ref ref="RollingFile" />
+                        <appender-ref ref="logstash" />
+                	</root>
 
 
