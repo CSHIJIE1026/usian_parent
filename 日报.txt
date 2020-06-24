@@ -532,6 +532,161 @@
             2.3.2、测试
                 1、修改ItemCategoryServiceImpl
                 2、测试熔断是否生效
+---------------2020年6月24日----------------
+        1、MySql主从复制
+            1.1、安装mysql
+                1.1.1、下载
+                1.1.2、卸载预装mysql
+                    #查看已安装：
+                    [root@centos upload]# rpm -qa|grep mysql
+                    #卸载：
+                    [root@centos upload]# rpm -e --nodeps mysql-libs-5.1.71-1.el6.x86_64
+                    #再次查看：
+                    [root@centos upload]# rpm -qa|grep mysql
+                1.1.3、上传安装包
+                1.1.4、解压安装包
+                    [root@centos upload]# tar -zxvf mysql-5.6.31-linux-glibc2.5-x86_64.tar.gz -C /usr/java
+                    [root@centos upload]# cd /usr/java
+                    [root@centos java]# mv mysql-5.6.31-linux-glibc2.5-x86_64 mysql
+                1.1.5、复制mysql的配置文件
+                    [root@centos java]# cd mysql
+                    [root@centos java]# cp support-files/my-default.cnf /etc/my.cnf
+                    [root@centos java]# cp support-files/mysql.server /etc/rc.d/init.d/mysql
+                1.1.6、修改my.cnf
+                    vim /etc/my.cnf
+                    basedir = /usr/java/mysql
+                    datadir = /usr/java/mysql/data
+                    log-error = /usr/java/mysql/data/error.log
+                    pid-file = /usr/java/mysql/data/mysql.pid
+                    user = root
+                    tmpdir = /tmp
+                1.1.7、初始化数据库
+                    [root@centos java]# cd /usr/java/mysql
+                    [root@centos mysql]# ./scripts/mysql_install_db --user=root --basedir=/usr/java/mysql
+                    --datadir=/usr/java/mysql/data --pid-file=/usr/java/mysql/data/mysql.pid --tmpdir=/tmp
+                1.1.8、启动和关闭mysql
+                    [root@centos mysql]# service mysql start
+                    Starting MySQL..                                          [确定]
+                    [root@centos mysql]# service mysql stop
+                    Shutting down MySQL..                                     [确定]
+                    [root@centos mysql]# service mysql restart
+                    Shutting down MySQL..
+                    Starting MySQL..                                          [确定]
+                1.1.8、配置mysql命令支持
+                    如果提示没有mysql命令，需要添加软连接
+                    [root@centos mysql]# ln -s /usr/java/mysql/bin/mysql /usr/bin/mysql
+                1.1.9、修改MySQL密码
+                    [root@centos upload]# mysql -u root
+                    mysql> use mysql;
+                    mysql> update user set password= password("1111") where user='root';
+                    mysql> flush privileges;
+                1.1.10、开放远程登录权限
+                    mysql>GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '1111' WITH GRANT OPTION;
+                    mysql>FLUSH PRIVILEGES;
+                1.1.11、设置开机启动
+                    [root@centos mysql]# chkconfig mysql on
+            1.2、MySQL主从复制
+                1.2.1、mysql主从简介
+                    1. MySQL 默认支持主(master)从(slave)功能.
+                    2. 主从复制效果：在主数据库中操作时,从同步进行变化.
+                    3. 主从复制本质：主数据的操作写入到日志中,从数据库从日志中读取,进行操作.
+                    主从备份要素：
+                        1. 开启日志功能
+                        2. 每个数据库需要有一个 server_id,主 server_id 值小于从server_id(标识从哪server写入的)
+                        3. 每个 mysql 都有一个 uuid,由于虚拟机直接进行克隆,需要修改uuid 的值(唯一识别码)
+                        4. 必须要在主数据库中有一个用户具有被从数据库操作的权限.
+                1.2.2、配置mysql主从步骤
+                    1.2.2.1、克隆mysql1的虚拟机
+                    1.2.2.2、配置主数据库
+                        1、修改主数据库的my.cnf文件
+                        2、重启mysql
+                             [root@centos upload]# service mysql restart
+                        3、通过命令可以观察主数据库在主从关系中状态.
+                    1.2.2.3、配置从数据库
+                        1、修改server_id
+                        2、data文件夹auto.cnf编写当前mysql的uuid
+                        3、重启mysql
+                            [root@centos upload]# service mysql restart
+                        4、修改slave
+                            mysql> stop slave;
+                            mysql> change master to master_host='192.168.3.137',master_user='root',master_password='1111',master_log_file='master_log.000003';
+                            mysql> start slave;
+                        5、查看slave状态
+                            mysql>show slave status \G;
+                            io线程和sql线程已开启：
+                                Slave_IO_Running:Yes
+                                Slave_SQL_Running:Yes
+                            只要没有错误,说明配置成功主从关系：
+                                Last_IO_Errno:0
+                                Last_IO_Errnr:
+                                Last_SQL_Errno:0
+                                Last_SQL_Errnr:
+                        6、验证主从关系
+                                在主数据库中新建数据库,新建表,添加数据,观察从数据库的
+        2、MyCat
+            2.1、MyCat简介
+                MyCAT是一个数据库中间件。国产开源项目，前身是cobar项目。
+            2.2、Mycat对多数据库的支持
+                MySql Oracle SQLServer
+            2.3、MyCAT架构
+                MyCAT使用Mysql的通讯协议模拟成了一个Mysql服务器，所有能使用Mysql的客户端以及编程语言都能将MyCAT当成是Mysql Server来使用，
+                不必开发新的客户端协议。
+            2.4、MyCat分库分表
+                垂直分割（分库）：指按照业务将表进行分类，分布到不同的数据库上面，这样也就将数据或者说压力分担到不同的库上面
+                水平分割（分表）：一个表格的数据按照行分割到多个节点上
+                典型的分片规则：
+                	根据主键编号进行hash、求余  几个MySQL求余几
+            2.5、MyCat安装
+                2.5.1、下载mycat
+                2.5.2、安装Mycat
+                    1、把MyCat的压缩包上传到linux服务器
+                    2、解压缩，得到mycat目录
+                        [root@centos upload]# tar -zxvf Mycat-server-1.6-RELEASE-20161028204710-linux.tar.gz -C /usr/java
+                    3、启动和关闭MyCat
+                        进入mycat/bin，启动MyCat
+                        启动命令：./mycat start
+                        停止命令：./mycat stop
+                        重启命令：./mycat restart
+                        查看状态：./mycat status
+                        注意：可以使用mysql的客户端直接连接mycat服务。默认服务端口为8066
+        3、Mycat分库分表和读写分离
+            3.1、需求
+                把商品表分片存储到两个数据节点上
+            3.2、安装环境
+            3.4、MyCat重要概念
+                1、逻辑库（schema）：一个包含了所有数据库的逻辑上的数据库
+                2、逻辑表（table）：一个包含了所有表的逻辑上的表
+                3、数据主机（dataHost）：数据库软件安装到哪个服务器上  节点
+                4、数据节点（dataNode）：数据库软件中的 database  数据库中的MySQL
+                5、分片规则（rule）：拆分规则
+            3.5. 配置schema.xml
+                3.5.1、Schema.xml介绍
+                    Schema.xml作为MyCat中重要的配置文件之一，管理着MyCat的逻辑库、表、分片规则、DataNode以及DataSource。
+                3.5.2、Schema.xml配置
+            3.6、配置server.xml
+                3.6.1、server.xml介绍
+                    server.xml几乎保存了所有mycat需要的系统配置信息。最常用的是在此配置用户名、密码及权限。
+                3.6.2、server.xml配置
+            3.7、配置rule.xml
+                3.7.1.分片规则
+                    3.7.1.1.auto-sharding-long 规则
+                    3.7.1.2.crc32slot  规则   (采用这种)
+                3.7.2、rule.xml配置
+            3.8、测试
+                3.8.1、创建库
+                    在主数据库中分别创建db1、db2、db3
+                3.8.2、创建表并插入数据
+                    配置完毕后，重新启动mycat。
+                    使用mysql客户端连接mycat，创建表并插入数据。
+                3.8.3、分库测试
+                3.8.4、项目测试
+                    1、修改数据库url
+                    2、测试
+
+
+
+
+
 
 
 

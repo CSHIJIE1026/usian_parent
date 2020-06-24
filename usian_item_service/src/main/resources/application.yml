@@ -5,9 +5,9 @@ spring:
     name: usian-item-service
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/usian?characterEncoding=UTF-8
+    url: jdbc:mysql://192.168.3.139:8066/usian?characterEncoding=UTF-8
     username: root
-    password: root
+    password: 1111
     type: com.alibaba.druid.pool.DruidDataSource
   redis:
     cluster:
