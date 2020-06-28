@@ -1,0 +1,11 @@
+spring:
+  rabbitmq:
+    host: 192.168.3.128
+    username: admin
+    password: 1111
+    virtual-host: /
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh #springboot 默认开启了权限拦截 会导致/bus-refresh出现 405，拒绝访问

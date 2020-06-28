@@ -682,13 +682,67 @@
                 3.8.4、项目测试
                     1、修改数据库url
                     2、测试
-
-
-
-
-
-
-
+---------------2020年6月28日----------------
+        1、Swagger
+            1.1、Swagger是什么？
+                swagger是实现了openapi规范的工具集，用于生产api文档并提供可视化的restful风格的web服务
+            1.2、为什么要使用Swagger？
+                前端和后端的唯一联系，变成了API接口，需要一个规范
+            1.3、Swagger使用
+                修改usian_item_web
+               1.3.1.pom.xml
+                    springfox-swagger2
+                    springfox-swagger-ui
+               1.3.2、config
+                	@Configuration
+                    @EnableSwagger2
+                	public class SwaggerConfig{
+                	    @Bean
+                		public Docket getDocket(){....}
+                		private ApiInfo apiInfo(){....}
+                	}
+               1.3.3、controller、pojo
+                	@Api()：描述controller
+                	@ApiOperation()：描述方法
+                	@ApiImplicitParam()：描述参数
+                	@ApiImplicitParams()：描述多个参数
+                	@APIModel()：描述对象参数
+                	@ApiModelProperty()：描述对象中的属性
+        2、访问swagger接口
+            1、启动服务，然后访问：http://localhost:8091/swagger-ui.html
+            2、点击item-controller，查看接口信息
+            3、点击任意一个接口，即可看到详细信息
+        3、测试swagger接口
+            1、点击Try It Out测试接口
+            2、点击execute发送请求
+            3、响应结果
+        4、网关服务
+                    4.1、网关服务分析
+                        4.1.1、需求
+                            4.1.1.1、路由
+                                所有请求都通过网关访问服务的consumer
+                            4.1.1.2、容错
+                                客户端通过zuul无法调用consumer时，使用zuul对consumer进行降级
+                            4.1.1.3、限流
+                                使用令牌桶算法实现zuul对consumer的限流
+                    4.2、工程搭建
+                       4.2.1、创建common_zuul
+                    4.3、网关路由
+                       4.3.1、配置后台服务代理
+                        4.3.1.1、usian-manage-web
+                         4.3.1.1.1、vue.config.js
+                           修改 vue.config.js
+                         4.3.1.1.2.base.js
+                           修改src/api/base.js
+                    4.4、网关容错
+                        4.4.1、common_zuul
+                            1.4.1.1、fallback
+                        4.4.2、测试
+                            后台网关容错
+                    4.5、网关限流
+                        4.5.1、common_zuul
+                            4.5.1.1、filter
+                        4.5.2、测试
 
 
 
